@@ -116,6 +116,11 @@ export function createRewriter({
         element.setAttribute("href", "/");
       },
     })
+    .on(".tgme_container", {
+      element(element) {
+        element.removeAndKeepContent();
+      },
+    })
     .on(
       ".tgme_channel_download_telegram, .tgme_background_wrap, .tgme_header_search, .tgme_footer",
       {
