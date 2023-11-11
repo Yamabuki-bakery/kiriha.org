@@ -123,6 +123,8 @@ export function renderToString(jsx: Node): string {
       case "track":
       case "wbr":
         return `<${jsx.type}${props} />`;
+      case undefined:
+        return innerHTML;
       default:
         return `<${jsx.type}${props}>${innerHTML}</${jsx.type}>`;
     }
