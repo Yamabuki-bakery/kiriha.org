@@ -1,3 +1,5 @@
+import { TextHandler } from "./TextHandler";
+
 function transformURL(url: string, baseURL: string) {
   const parsed = new URL(url.startsWith("//") ? "https:" + url : url);
   return new URL(`/p/${parsed.host}${parsed.pathname}`, baseURL).toString();
@@ -16,9 +18,14 @@ export function createRewriter({
   siteName: string;
   twitterSite: string;
 }): HTMLRewriter {
+  let channel_title = "";
+  let channel_photo = "";
+  let last_value = 0;
+  const counters = new Map<string, number>();
   return new HTMLRewriter()
     .on("head", {
       element(element) {
+        counters.clear();
         element.onEndTag((end) => {
           end.before(`<link rel="stylesheet" href="/style.css">`, {
             html: true,
@@ -28,26 +35,18 @@ export function createRewriter({
     })
     .on(
       "title",
-      new (class {
-        buffer = "";
-        text(text: Text) {
-          this.buffer += text.text;
-          if (text.lastInTextNode) {
-            const title = this.buffer.trim();
-            const replaced = title.replace(/ – Telegram$/g, "");
-            text.replace(replaced);
-            this.buffer = "";
-          } else {
-            text.remove();
-          }
-        }
-      })()
+      new TextHandler(
+        (title) => (channel_title = title.replace(/ – Telegram$/g, ""))
+      )
     )
     .on('meta[property="og:image"],meta[property="twitter:image"]', {
       element(element) {
         element.setAttribute(
           "content",
-          transformURL(element.getAttribute("content")!, baseURL)
+          (channel_photo = transformURL(
+            element.getAttribute("content")!,
+            baseURL
+          ))
         );
       },
     })
@@ -78,6 +77,12 @@ export function createRewriter({
     .on("script", {
       element(element) {
         element.remove();
+      },
+    })
+    .on('link[rel="icon"][type="image/svg+xml"]', {
+      element(element) {
+        element.setAttribute("type", "image/jpeg");
+        element.setAttribute("href", channel_photo);
       },
     })
     .on(
@@ -111,6 +116,32 @@ export function createRewriter({
         },
       }
     )
+    .on(
+      ".tgme_channel_info_counter .counter_value",
+      new TextHandler((text) => {
+        last_value = +text;
+      })
+    )
+    .on(
+      ".tgme_channel_info_counter .counter_value",
+      new TextHandler((text) => {
+        last_value = +text;
+      })
+    )
+    .on(
+      ".tgme_channel_info_counter .counter_type",
+      new TextHandler((text) => {
+        counters.set(text, last_value);
+      })
+    )
+    .on(".tgme_header", {
+      element(element) {
+        element.setInnerContent("", { html: true });
+        element.onEndTag((end) => {
+          end.before(JSON.stringify([...counters.entries()]));
+        });
+      },
+    })
     .on("img", {
       element(element) {
         element.setAttribute("loading", "lazy");
