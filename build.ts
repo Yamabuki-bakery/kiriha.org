@@ -1,0 +1,15 @@
+const router = new Bun.FileSystemRouter({
+  dir: "functions",
+  style: "nextjs",
+});
+
+console.log(router.routes);
+
+const result = await Bun.build({
+  entrypoints: Object.values(router.routes),
+  outdir: "dist/functions",
+  target: "node",
+});
+if (result.outputs) {
+  console.log(result.outputs);
+}
