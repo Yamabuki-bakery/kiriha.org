@@ -42,12 +42,11 @@ export function createRewriter({
         (title) => (channel_title = title.replace(/ – Telegram$/g, ""))
       )
     )
-    .on(
-      'meta[property="og:description"]',
-      new TextHandler((text) => {
-        channel_description = text;
-      })
-    )
+    .on('meta[property="og:description"]', {
+      element(element) {
+        channel_description = element.getAttribute("content")!;
+      },
+    })
     .on('meta[property="og:image"],meta[property="twitter:image"]', {
       element(element) {
         element.setAttribute(
