@@ -116,7 +116,7 @@ export function createRewriter({
         element.setAttribute("href", "/");
       },
     })
-    .on(".tgme_container", {
+    .on(".tgme_main, .tgme_container, .tgme_widget_message_wrap", {
       element(element) {
         element.removeAndKeepContent();
       },
