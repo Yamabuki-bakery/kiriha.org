@@ -20,6 +20,8 @@ export function createRewriter({
   twitterSite: string;
 }): HTMLRewriter {
   let channel_title = "";
+  let channel_username = "";
+  let channel_description = "";
   let channel_photo = "";
   let last_value = 0;
   const counters = new Map<string, number>();
@@ -39,6 +41,12 @@ export function createRewriter({
       new TextHandler(
         (title) => (channel_title = title.replace(/ – Telegram$/g, ""))
       )
+    )
+    .on(
+      'meta[property="og:description"]',
+      new TextHandler((text) => {
+        channel_description = text;
+      })
     )
     .on('meta[property="og:image"],meta[property="twitter:image"]', {
       element(element) {
@@ -124,9 +132,9 @@ export function createRewriter({
       })
     )
     .on(
-      ".tgme_channel_info_counter .counter_value",
+      ".tgme_channel_info_header_username a",
       new TextHandler((text) => {
-        last_value = +text;
+        channel_username = text;
       })
     )
     .on(
@@ -137,18 +145,33 @@ export function createRewriter({
     )
     .on(".tgme_header", {
       element(element) {
+        element.setAttribute("class", "tgme_header");
         element.setInnerContent("", { html: true });
         element.onEndTag((end) => {
           end.before(
             renderToString(
-              <div>
-                {[...counters.entries()].map(([type, value]) => (
-                  <div>
-                    <div>{type}</div>
-                    <div>{value}</div>
+              <>
+                <img class="tgme_page_photo_image" src={channel_photo} />
+                <div class="tgme_channel_info_header_title_wrap">
+                  <div class="tgme_channel_info_header_title">
+                    {channel_title}
                   </div>
-                ))}
-              </div>
+                  <div class="tgme_channel_info_header_username">
+                    {channel_username}
+                  </div>
+                </div>
+                <div class="tgme_channel_info_counters">
+                  {[...counters.entries()].map(([type, value]) => (
+                    <div class="tgme_channel_info_counter">
+                      <div class="counter_type">{type}</div>
+                      <div class="counter_value">{value}</div>
+                    </div>
+                  ))}
+                </div>
+                <div class="tgme_channel_info_description">
+                  {channel_description}
+                </div>
+              </>
             ),
             { html: true }
           );

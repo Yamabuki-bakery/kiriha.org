@@ -13,6 +13,7 @@
     "skipLibCheck": true,
     "jsx": "react",
     "jsxFactory": "h",
+    "jsxFragmentFactory": "h.Fragment",
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
