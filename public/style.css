@@ -41,6 +41,7 @@ body {
   width: 100%;
   max-width: 800px;
   margin: auto;
+  box-sizing: border-box;
 }
 .tgme_header .tgme_page_photo_image {
   grid-area: icon;
