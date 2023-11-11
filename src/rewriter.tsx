@@ -188,9 +188,10 @@ export function createRewriter({
           );
           end.after(
             renderToString(
-              <section class="tgme_channel_info_description">
-                {channel_description}
-              </section>
+              <section
+                class="tgme_channel_info_description"
+                dangerouslySetInnerHTML={{ __html: channel_description }}
+              />
             ),
             { html: true }
           );
@@ -222,7 +223,7 @@ export function createRewriter({
                   src={transformed}
                   loading="lazy"
                   style={`aspect-ratio: ${image_width} / ${
-                    image_width * image_ratio / 100
+                    (image_width * image_ratio) / 100
                   }`}
                 />
               ),
