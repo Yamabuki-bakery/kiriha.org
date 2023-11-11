@@ -10,6 +10,6 @@ const result = await Bun.build({
   outdir: "dist/functions",
   target: "node",
 });
-if (result.outputs) {
-  console.log(result.outputs);
+if (result.logs.length) {
+  console.log(result.logs);
 }
