@@ -1,12 +1,9 @@
 import { Env } from "$/env";
-import { LazyInit } from "$/lazyinit";
 import { createRewriter } from "$/rewriter";
-
-const lazyRewriter = new LazyInit(createRewriter);
 
 export const onRequest: PagesFunction<Env> = async ({ request, env }) => {
   const parsed = new URL(request.url);
-  const rewriter = lazyRewriter.get({
+  const rewriter = createRewriter({
     baseURL: `https://${parsed.host}/`,
     siteName: env.SiteName,
     twitterSite: env.TwitterSite,
@@ -21,4 +18,3 @@ export const onRequest: PagesFunction<Env> = async ({ request, env }) => {
     },
   });
 };
-
