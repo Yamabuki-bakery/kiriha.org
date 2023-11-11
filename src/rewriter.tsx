@@ -222,7 +222,7 @@ export function createRewriter({
                   src={transformed}
                   loading="lazy"
                   style={`aspect-ratio: ${image_width} / ${
-                    image_width / image_ratio / 100
+                    image_width * image_ratio / 100
                   }`}
                 />
               ),
