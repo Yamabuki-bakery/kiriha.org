@@ -8,9 +8,6 @@ export const onRequest: PagesFunction<Env> = ({ request }) => {
     return new Response(null, { status: 403 });
   }
   return fetch(`https://${host}/${pathname}`, {
-    headers: {
-      "User-Agent": request.headers.get("User-Agent")!,
-      Accept: request.headers.get("Accept")!,
-    },
+    headers: request.headers,
   });
 };
