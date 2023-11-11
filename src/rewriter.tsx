@@ -228,6 +228,17 @@ export function createRewriter({
         image_ratio = +style.match(/(?<=padding-top:)[^]+(?=%)/g)![0];
       },
     })
+    .on(".link_preview_right_image", {
+      element(element) {
+        element.tagName = "img";
+        const style = element.getAttribute("style")!;
+        const url = style.match(/(?<=background-image:url\(')[^']+/g)![0];
+        const transformed = transformURL(url, baseURL);
+        element.removeAttribute("style");
+        element.setAttribute("src", transformed);
+        element.setAttribute("loading", "lazy");
+      },
+    })
     .on('[style*="background-image:url"]', {
       element(element) {
         const style = element.getAttribute("style");
