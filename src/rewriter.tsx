@@ -134,6 +134,11 @@ export function createRewriter({
         },
       }
     )
+    .on(".tgme_widget_message", {
+      element(element) {
+        element.removeAttribute("data-view");
+      },
+    })
     .on(
       ".tgme_channel_info_counter .counter_value",
       new TextHandler((text) => {
