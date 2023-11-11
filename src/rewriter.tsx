@@ -263,5 +263,10 @@ export function createRewriter({
         );
         element.setAttribute("style", replaced);
       },
+    })
+    .on("time[datetime]", {
+      element(element) {
+        element.tagName = "auto-time";
+      },
     });
 }
