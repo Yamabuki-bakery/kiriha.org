@@ -211,7 +211,7 @@ export function createRewriter({
       element(element) {
         try {
           const style = element.getAttribute("style")!;
-          image_width = +style.match(/(?<=width:)[^]+(?=px)/g)![0];
+          image_width = +style.match(/(?<=width:)[^]+?(?=px)/g)![0];
           const url = style.match(/(?<=background-image:url\(')[^']+/g)![0];
           const transformed = transformURL(url, baseURL);
           element.removeAttribute("style");
@@ -239,7 +239,7 @@ export function createRewriter({
       element(element) {
         element.remove();
         const style = element.getAttribute("style")!;
-        image_ratio = +style.match(/(?<=padding-top:)[^]+(?=%)/g)![0];
+        image_ratio = +style.match(/(?<=padding-top:)[^]+?(?=%)/g)![0];
       },
     })
     .on(".link_preview_right_image, .link_preview_image", {
