@@ -1,3 +1,25 @@
+:root {
+  --max-width: 960px;
+  --preview-image-size: 300px;
+  --side-margin: 1em;
+  --message-radius: 1em;
+  --message-max-width: max-content;
+}
+@media screen and (max-width: 800px) {
+  :root {
+      --preview-image-size: 200px;
+      --side-margin: 0.5em;
+      --message-radius: 0.5em;
+  }
+}
+@media screen and (max-width: 560px) {
+  :root {
+      --preview-image-size: 120px;
+      --side-margin: 0;
+      --message-radius: 0;
+      --message-max-width: 100%;
+  }
+}
 body {
   display: grid;
   padding: 0;
@@ -39,7 +61,7 @@ body {
   box-shadow: inset 0 -1px 2px #fff8, 0 1px 5px #0001;
   border-radius: 0 0 1em 1em;
   width: 100%;
-  max-width: 800px;
+  max-width: 1200px;
   margin: auto;
   box-sizing: border-box;
 }
@@ -90,27 +112,29 @@ body {
   box-shadow: 0 1px 3px #0001;
   background-color: #fffa;
   width: max-content;
-  max-width: 800px;
+  max-width: var(--max-width);
+  box-sizing: border-box;
 }
 .tgme_channel_history {
   display: flex;
   flex-direction: column-reverse;
   gap: 1em;
-  max-width: 800px;
+  max-width: var(--max-width);
+  box-sizing: border-box;
   margin: auto;
 }
 .tgme_widget_message {
-  margin: 0 1em;
+  margin: 0 var(--side-margin);
   padding: 0.7em 1em;
   display: flex;
   flex-direction: column;
   gap: 0.5em;
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  border-radius: 1em;
+  border-radius: var(--message-radius);
   box-shadow: 0 1px 3px #0001;
   background-color: #fffa;
-  max-width: max-content;
+  max-width: var(--message-max-width);
 }
 .tgme_widget_message_user {
   display: grid;
@@ -141,12 +165,13 @@ body {
 .tgme_widget_message_link_preview:has(.link_preview_right_image) {
   grid-template:
       "icon title" auto
-      "icon description" 1fr / 300px 1fr;
-  height: 300px;
+      "icon description" 1fr / var(--preview-image-size) 1fr;
+  height: var(--preview-image-size);
   padding-left: 0;
 }
 .tgme_widget_message_link_preview:has(.link_preview_image) {
-  min-height: 300px;height: auto;
+  min-height: var(--preview-image-size);
+  height: auto;
   grid-template:
       "icon" auto
       "title" auto
