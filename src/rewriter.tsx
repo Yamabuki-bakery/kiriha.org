@@ -241,7 +241,7 @@ export function createRewriter({
         image_ratio = +style.match(/(?<=padding-top:)[^]+(?=%)/g)![0];
       },
     })
-    .on(".link_preview_right_image", {
+    .on(".link_preview_right_image, .link_preview_image", {
       element(element) {
         element.tagName = "img";
         const style = element.getAttribute("style")!;
