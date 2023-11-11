@@ -174,10 +174,15 @@ export function createRewriter({
                     </div>
                   ))}
                 </div>
-                <div class="tgme_channel_info_description">
-                  {channel_description}
-                </div>
               </>
+            ),
+            { html: true }
+          );
+          end.after(
+            renderToString(
+              <section class="tgme_channel_info_description">
+                {channel_description}
+              </section>
             ),
             { html: true }
           );
