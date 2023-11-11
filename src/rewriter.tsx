@@ -24,6 +24,8 @@ export function createRewriter({
   let channel_description = "";
   let channel_photo = "";
   let last_value = 0;
+  let image_width = 0;
+  let image_ratio = 0;
   const counters = new Map<string, number>();
   return new HTMLRewriter()
     .on("head", {
@@ -189,6 +191,41 @@ export function createRewriter({
           "src",
           transformURL(element.getAttribute("src")!, baseURL)
         );
+      },
+    })
+    .on(".tgme_widget_message_photo_wrap", {
+      element(element) {
+        try {
+          const style = element.getAttribute("style")!;
+          image_width = +style.match(/(?<=width:)[^]+(?=px)/g)![0];
+          const url = style.match(/(?<=background-image:url\(')[^']+/g)![0];
+          const transformed = transformURL(url, baseURL);
+          element.removeAttribute("style");
+          element.onEndTag((end) => {
+            end.before(
+              renderToString(
+                <img
+                  class="tgme_widget_message_photo"
+                  src={transformed}
+                  loading="lazy"
+                  style={`aspect-ratio: ${image_width} / ${
+                    image_width * image_ratio
+                  }`}
+                />
+              ),
+              { html: true }
+            );
+          });
+        } catch {
+          element.remove();
+        }
+      },
+    })
+    .on(".tgme_widget_message_photo_wrap > .tgme_widget_message_photo", {
+      element(element) {
+        element.remove();
+        const style = element.getAttribute("style")!;
+        image_ratio = +style.match(/(?<=padding-top:)[^]+(?=%)/g)![0];
       },
     })
     .on('[style*="background-image:url"]', {
