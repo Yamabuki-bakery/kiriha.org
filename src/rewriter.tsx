@@ -1,4 +1,5 @@
 import { TextHandler } from "./TextHandler";
+import { h, renderToString } from "./jsx";
 
 function transformURL(url: string, baseURL: string) {
   const parsed = new URL(url.startsWith("//") ? "https:" + url : url);
@@ -138,7 +139,19 @@ export function createRewriter({
       element(element) {
         element.setInnerContent("", { html: true });
         element.onEndTag((end) => {
-          end.before(JSON.stringify([...counters.entries()]));
+          end.before(
+            renderToString(
+              <div>
+                {[...counters.entries()].map(([type, value]) => (
+                  <div>
+                    <div>{type}</div>
+                    <div>{value}</div>
+                  </div>
+                ))}
+              </div>
+            ),
+            { html: true }
+          );
         });
       },
     })
