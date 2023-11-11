@@ -17,6 +17,15 @@ export function createRewriter({
   twitterSite: string;
 }): HTMLRewriter {
   return new HTMLRewriter()
+    .on("head", {
+      element(element) {
+        element.onEndTag((end) => {
+          end.before(`<link rel="stylesheet" href="/style.css">`, {
+            html: true,
+          });
+        });
+      },
+    })
     .on(
       "title",
       new (class {

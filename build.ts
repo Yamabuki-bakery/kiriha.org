@@ -7,7 +7,7 @@ console.log(router.routes);
 
 const result = await Bun.build({
   entrypoints: Object.values(router.routes),
-  outdir: "dist/functions",
+  outdir: "public/functions",
   target: "node",
 });
 if (result.logs.length) {

@@ -175,3 +175,5 @@ dist
 .DS_Store
 
 .wrangler
+
+public/functions
