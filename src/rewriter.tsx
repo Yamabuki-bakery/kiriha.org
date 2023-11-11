@@ -230,7 +230,7 @@ export function createRewriter({
     })
     .on('[style*="background-image:url"]', {
       element(element) {
-        const style = element.getAttribute("style")!;
+        const style = element.getAttribute("style");
         if (!style) return;
         const replaced = style.replaceAll(
           /(?<=background-image:url\(')([^']+)/g,
