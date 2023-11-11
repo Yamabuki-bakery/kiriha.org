@@ -1,12 +1,26 @@
-const router = new Bun.FileSystemRouter({
-  dir: "functions",
-  style: "nextjs",
-});
+import { readdir } from "node:fs/promises";
+import { join } from "node:path";
 
-console.log(router.routes);
+async function* walkDir(path: string): AsyncGenerator<string> {
+  const dirents = await readdir(path, { withFileTypes: true });
+  for (const dirent of dirents) {
+    const finalPath = join(path, dirent.name);
+    if (dirent.isDirectory()) {
+      yield* walkDir(finalPath);
+    } else {
+      yield finalPath;
+    }
+  }
+}
+
+const entrypoints: string[] = []
+
+for await (const path of walkDir('./functions')) {
+  entrypoints.push(path);
+}
 
 const result = await Bun.build({
-  entrypoints: Object.values(router.routes),
+  entrypoints,
   outdir: "public/functions",
   target: "node",
 });
