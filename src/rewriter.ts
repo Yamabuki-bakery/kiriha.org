@@ -1,6 +1,6 @@
 function transformURL(url: string, baseURL: string) {
   const parsed = new URL(url.startsWith("//") ? "https:" + url : url);
-  return new URL(`/p/${parsed.host}/${parsed.pathname}`, baseURL).toString();
+  return new URL(`/p/${parsed.host}${parsed.pathname}`, baseURL).toString();
 }
 
 function transformHref(link: string) {
