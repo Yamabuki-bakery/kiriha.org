@@ -124,7 +124,7 @@ export function createRewriter({
       },
     })
     .on(
-      ".tgme_channel_download_telegram, .tgme_background_wrap, .tgme_header_search, .tgme_footer",
+      ".tgme_channel_download_telegram, .tgme_background_wrap, .tgme_header_search, .tgme_footer, .tgme_widget_message_user",
       {
         element(element) {
           element.remove();
