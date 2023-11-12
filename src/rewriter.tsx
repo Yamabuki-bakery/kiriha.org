@@ -10,24 +10,37 @@ function transformHref(link: string) {
   return "/?" + link.split("?")[1];
 }
 
-export function createRewriter({
-  baseURL,
-  siteName,
-  twitterSite,
-}: {
+type Context = {
   baseURL: string;
   siteName: string;
   twitterSite: string;
-}): HTMLRewriter {
+};
+
+export function createRewriter(context: Context): HTMLRewriter {
+  const rewriter = new HTMLRewriter().on("time[datetime]", {
+    element(element) {
+      element.tagName = "me-time";
+    },
+  });
+  header_process(rewriter, context);
+  message_photo_process(rewriter, context);
+  message_video_process(rewriter, context);
+  group_process(rewriter);
+  post_process(rewriter, context);
+  return rewriter;
+}
+
+function header_process(
+  rewriter: HTMLRewriter,
+  { baseURL, siteName, twitterSite }: Context
+) {
   let channel_title = "";
   let channel_username = "";
   let channel_description = "";
   let channel_photo = "";
   let last_value = 0;
-  let image_width = 0;
-  let image_ratio = 0;
   const counters = new Map<string, number>();
-  return new HTMLRewriter()
+  rewriter
     .on("head", {
       element(element) {
         counters.clear();
@@ -197,22 +210,19 @@ export function createRewriter({
           );
         });
       },
-    })
-    .on("img", {
-      element(element) {
-        element.setAttribute("loading", "lazy");
-        element.setAttribute(
-          "src",
-          transformURL(element.getAttribute("src")!, baseURL)
-        );
-      },
-    })
+    });
+}
+
+function message_photo_process(rewriter: HTMLRewriter, { baseURL }: Context) {
+  let image_width = 0;
+  let image_ratio = 0;
+  rewriter
     .on(".tgme_widget_message_photo_wrap", {
       element(element) {
         try {
           const style = element.getAttribute("style")!;
-          image_width = +style.match(/(?<=width:)[^]+?(?=px)/g)![0];
-          const url = style.match(/(?<=background-image:url\(')[^']+/g)![0];
+          image_width = extractWidthFromStyle(style);
+          const url = extractBackgroundFromStyle(style);
           const transformed = transformURL(url, baseURL);
           element.removeAttribute("style");
           element.onEndTag((end) => {
@@ -239,18 +249,84 @@ export function createRewriter({
       element(element) {
         element.remove();
         const style = element.getAttribute("style")!;
-        image_ratio = +style.match(/(?<=padding-top:)[^]+?(?=%)/g)![0];
+        image_ratio = extractPaddingTopFromStyle(style);
       },
     })
     .on(".link_preview_right_image, .link_preview_image", {
       element(element) {
         element.tagName = "img";
         const style = element.getAttribute("style")!;
-        const url = style.match(/(?<=background-image:url\(')[^']+/g)![0];
+        const url = extractBackgroundFromStyle(style);
         const transformed = transformURL(url, baseURL);
         element.removeAttribute("style");
         element.setAttribute("src", transformed);
         element.setAttribute("loading", "lazy");
+      },
+    });
+}
+
+function message_video_process(rewriter: HTMLRewriter, { baseURL }: Context) {
+  let video_source = "";
+  rewriter
+    .on(".tgme_widget_message_video_thumb", {
+      element(element) {
+        element.remove();
+        const style = element.getAttribute("style")!;
+        const url = extractBackgroundFromStyle(style);
+        video_source = transformURL(url, baseURL);
+      },
+    })
+    .on(".tgme_widget_message_video_wrap", {
+      element(element) {
+        const style = element.getAttribute("style")!;
+        const width = extractWidthFromStyle(style);
+        const ratio = extractPaddingTopFromStyle(style);
+        element.replace(
+          renderToString(
+            <me-video class="tgme_widget_message_video">
+              <img
+                src={video_source}
+                loading="lazy"
+                style={`aspect-ratio: ${width} / ${(width * ratio) / 100}`}
+              />
+            </me-video>
+          ),
+          { html: true }
+        );
+      },
+    });
+}
+
+function group_process(rewriter: HTMLRewriter) {
+  rewriter
+    .on(".tgme_widget_message_grouped_wrap, .tgme_widget_message_grouped", {
+      element(element) {
+        element.removeAndKeepContent();
+      },
+    })
+    .on(".grouped_media_helper", {
+      element(element) {
+        element.remove();
+      },
+    })
+    .on(".tgme_widget_message_grouped_layer", {
+      element(element) {
+        element.tagName = "me-grouped";
+        element.setAttribute("class", "tgme_widget_message_grouped");
+        element.removeAttribute("style");
+      },
+    });
+}
+
+function post_process(rewriter: HTMLRewriter, { baseURL }: Context) {
+  rewriter
+    .on("img", {
+      element(element) {
+        element.setAttribute("loading", "lazy");
+        element.setAttribute(
+          "src",
+          transformURL(element.getAttribute("src")!, baseURL)
+        );
       },
     })
     .on('[style*="background-image:url"]', {
@@ -263,10 +339,15 @@ export function createRewriter({
         );
         element.setAttribute("style", replaced);
       },
-    })
-    .on("time[datetime]", {
-      element(element) {
-        element.tagName = "auto-time";
-      },
     });
+}
+
+function extractWidthFromStyle(style: string) {
+  return +style.match(/(?<=width:)[^]+?(?=px)/g)![0];
+}
+function extractPaddingTopFromStyle(style: string) {
+  return +style.match(/(?<=padding-top:)[^]+?(?=%)/g)![0];
+}
+function extractBackgroundFromStyle(style: string) {
+  return style.match(/(?<=background-image:url\(')[^']+/g)![0];
 }
