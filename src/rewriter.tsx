@@ -1,9 +1,10 @@
 import { TextHandler } from "./TextHandler";
 import { h, renderToString } from "./jsx";
 
-function transformURL(url: string, baseURL: string) {
+function transformURL(url: string) {
   const parsed = new URL(url.startsWith("//") ? "https:" + url : url);
-  return new URL(`/p/${parsed.host}${parsed.pathname}`, baseURL).toString();
+  return new URL(`/p/${parsed.host}${parsed.pathname}`, "https://example.com/")
+    .pathname;
 }
 
 function transformHref(link: string) {
@@ -11,7 +12,6 @@ function transformHref(link: string) {
 }
 
 type Context = {
-  baseURL: string;
   siteName: string;
   twitterSite: string;
 };
@@ -23,16 +23,16 @@ export function createRewriter(context: Context): HTMLRewriter {
     },
   });
   header_process(rewriter, context);
-  message_photo_process(rewriter, context);
-  message_video_process(rewriter, context);
+  message_photo_process(rewriter);
+  message_video_process(rewriter);
   group_process(rewriter);
-  post_process(rewriter, context);
+  post_process(rewriter);
   return rewriter;
 }
 
 function header_process(
   rewriter: HTMLRewriter,
-  { baseURL, siteName, twitterSite }: Context
+  { siteName, twitterSite }: Context
 ) {
   let channel_title = "";
   let channel_username = "";
@@ -66,10 +66,7 @@ function header_process(
       element(element) {
         element.setAttribute(
           "content",
-          (channel_photo = transformURL(
-            element.getAttribute("content")!,
-            baseURL
-          ))
+          (channel_photo = transformURL(element.getAttribute("content")!))
         );
       },
     })
@@ -213,7 +210,7 @@ function header_process(
     });
 }
 
-function message_photo_process(rewriter: HTMLRewriter, { baseURL }: Context) {
+function message_photo_process(rewriter: HTMLRewriter) {
   let image_width = 0;
   let image_ratio = 0;
   rewriter
@@ -223,7 +220,7 @@ function message_photo_process(rewriter: HTMLRewriter, { baseURL }: Context) {
           const style = element.getAttribute("style")!;
           image_width = extractWidthFromStyle(style);
           const url = extractBackgroundFromStyle(style);
-          const transformed = transformURL(url, baseURL);
+          const transformed = transformURL(url);
           element.removeAttribute("style");
           element.onEndTag((end) => {
             end.before(
@@ -257,7 +254,7 @@ function message_photo_process(rewriter: HTMLRewriter, { baseURL }: Context) {
         element.tagName = "img";
         const style = element.getAttribute("style")!;
         const url = extractBackgroundFromStyle(style);
-        const transformed = transformURL(url, baseURL);
+        const transformed = transformURL(url);
         element.removeAttribute("style");
         element.setAttribute("src", transformed);
         element.setAttribute("loading", "lazy");
@@ -265,7 +262,7 @@ function message_photo_process(rewriter: HTMLRewriter, { baseURL }: Context) {
     });
 }
 
-function message_video_process(rewriter: HTMLRewriter, { baseURL }: Context) {
+function message_video_process(rewriter: HTMLRewriter) {
   let video_source = "";
   let video_ratio = 0;
   let video_duration = "";
@@ -297,7 +294,7 @@ function message_video_process(rewriter: HTMLRewriter, { baseURL }: Context) {
         element.remove();
         const style = element.getAttribute("style")!;
         const url = extractBackgroundFromStyle(style);
-        video_source = transformURL(url, baseURL);
+        video_source = transformURL(url);
       },
     })
     .on(".tgme_widget_message_video_player .tgme_widget_message_video_wrap", {
@@ -340,15 +337,12 @@ function group_process(rewriter: HTMLRewriter) {
     });
 }
 
-function post_process(rewriter: HTMLRewriter, { baseURL }: Context) {
+function post_process(rewriter: HTMLRewriter) {
   rewriter
     .on("img", {
       element(element) {
         element.setAttribute("loading", "lazy");
-        element.setAttribute(
-          "src",
-          transformURL(element.getAttribute("src")!, baseURL)
-        );
+        element.setAttribute("src", transformURL(element.getAttribute("src")!));
       },
     })
     .on('[style*="background-image:url"]', {
@@ -357,7 +351,7 @@ function post_process(rewriter: HTMLRewriter, { baseURL }: Context) {
         if (!style) return;
         const replaced = style.replaceAll(
           /(?<=background-image:url\(')([^']+)/g,
-          (url) => transformURL(url, baseURL)
+          transformURL
         );
         element.setAttribute("style", replaced);
       },

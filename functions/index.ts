@@ -2,9 +2,7 @@ import { Env } from "$/env";
 import { createRewriter } from "$/rewriter";
 
 export const onRequest: PagesFunction<Env> = async ({ request, env }) => {
-  const parsed = new URL(request.url);
   const rewriter = createRewriter({
-    baseURL: `https://${parsed.host}/`,
     siteName: env.SiteName,
     twitterSite: env.TwitterSite,
   });
