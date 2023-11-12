@@ -13,9 +13,9 @@ async function* walkDir(path: string): AsyncGenerator<string> {
   }
 }
 
-const entrypoints: string[] = []
+const entrypoints: string[] = [];
 
-for await (const path of walkDir('./functions')) {
+for await (const path of walkDir("./functions")) {
   entrypoints.push(path);
 }
 
@@ -26,4 +26,7 @@ const result = await Bun.build({
 });
 if (result.logs.length) {
   console.log(result.logs);
+}
+if (!result.success) {
+  process.exit(1);
 }
