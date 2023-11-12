@@ -23,6 +23,7 @@ export function createRewriter(context: Context): HTMLRewriter {
     },
   });
   header_process(rewriter, context);
+  message_link_process(rewriter);
   message_photo_process(rewriter);
   message_video_process(rewriter);
   group_process(rewriter);
@@ -208,6 +209,19 @@ function header_process(
         });
       },
     });
+}
+
+function message_link_process(rewriter: HTMLRewriter) {
+  rewriter.on(
+    'a.tgme_widget_message_link_preview[href^="https://telegra.ph/"]',
+    {
+      element(element) {
+        const href = element.getAttribute("href");
+        if (!href) return;
+        element.setAttribute("href", href.slice("https://telegra.ph/".length));
+      },
+    }
+  );
 }
 
 function message_photo_process(rewriter: HTMLRewriter) {
