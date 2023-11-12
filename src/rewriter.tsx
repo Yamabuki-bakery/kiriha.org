@@ -267,8 +267,32 @@ function message_photo_process(rewriter: HTMLRewriter, { baseURL }: Context) {
 
 function message_video_process(rewriter: HTMLRewriter, { baseURL }: Context) {
   let video_source = "";
+  let video_ratio = 0;
+  let video_duration = "";
   rewriter
-    .on(".tgme_widget_message_video_thumb", {
+    .on(".tgme_widget_message_video_player", {
+      element(element) {
+        element.onEndTag((end) => {
+          end.before(
+            renderToString(
+              <me-video class="tgme_widget_message_video">
+                <img
+                  class="tgme_widget_message_video_thumb"
+                  src={video_source}
+                  loading="lazy"
+                  style={`aspect-ratio: 100 / ${video_ratio}`}
+                />
+                <time class="tgme_widget_message_video_duration">
+                  {video_duration}
+                </time>
+              </me-video>
+            ),
+            { html: true }
+          );
+        });
+      },
+    })
+    .on(".tgme_widget_message_video_player .tgme_widget_message_video_thumb", {
       element(element) {
         element.remove();
         const style = element.getAttribute("style")!;
@@ -276,23 +300,21 @@ function message_video_process(rewriter: HTMLRewriter, { baseURL }: Context) {
         video_source = transformURL(url, baseURL);
       },
     })
-    .on(".tgme_widget_message_video_wrap", {
+    .on(".tgme_widget_message_video_player .tgme_widget_message_video_wrap", {
       element(element) {
         const style = element.getAttribute("style")!;
-        const width = extractWidthFromStyle(style);
-        const ratio = extractPaddingTopFromStyle(style);
-        element.replace(
-          renderToString(
-            <me-video class="tgme_widget_message_video">
-              <img
-                src={video_source}
-                loading="lazy"
-                style={`aspect-ratio: ${width} / ${(width * ratio) / 100}`}
-              />
-            </me-video>
-          ),
-          { html: true }
-        );
+        video_ratio = extractPaddingTopFromStyle(style);
+      },
+    })
+    .on(
+      ".tgme_widget_message_video_player .message_video_duration",
+      new TextHandler((text) => {
+        video_duration = text;
+      })
+    )
+    .on(".tgme_widget_message_video_player > *", {
+      element(element) {
+        element.remove();
       },
     });
 }

@@ -191,7 +191,8 @@ body {
     .tgme_widget_message_link_preview:has(.link_preview_right_image),
     .tgme_widget_message_link_preview:has(.link_preview_image)
   )
-  .link_preview_site_name {
+  .link_preview_site_name,
+.tgme_widget_message_video_duration {
   position: absolute;
   top: 0.5em;
   left: 0.5em;
@@ -244,6 +245,13 @@ body {
   width: auto;
   max-width: 100%;
   object-fit: cover;
+}
+.tgme_widget_message_video {
+  position: relative;
+}
+.tgme_widget_message_video_thumb {
+  display: block;
+  border-radius: 0.5em;
 }
 .emoji_default .emoji {
   background: none !important;
