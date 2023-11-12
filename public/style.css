@@ -84,6 +84,8 @@ body {
   display: flex;
   gap: 0.8em;
   overflow-x: auto;
+  align-self: stretch;
+  align-items: center;
 }
 .tgme_header .tgme_channel_info_counters .tgme_channel_info_counter {
   display: flex;
