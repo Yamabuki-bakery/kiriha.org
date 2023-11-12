@@ -33,7 +33,7 @@ function renderHtmlNode(node: HtmlNode | string): Node {
 }
 function createTag(node: HtmlNode): Node<any> {
   if (node.tag === "img") {
-    if (node.attrs.src.startsWith("https://telegra.ph/file/"))
+    if (node.attrs.src.startsWith("/file/"))
       return <img src={"/p/telegra.ph" + node.attrs.src} loading="lazy" />;
     return <img src={node.attrs.src} loading="lazy" />;
   }
