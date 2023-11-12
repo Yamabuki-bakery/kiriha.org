@@ -218,7 +218,10 @@ function message_link_process(rewriter: HTMLRewriter) {
       element(element) {
         const href = element.getAttribute("href");
         if (!href) return;
-        element.setAttribute("href", href.slice("https://telegra.ph/".length));
+        element.setAttribute(
+          "href",
+          "/h/" + href.slice("https://telegra.ph/".length)
+        );
       },
     }
   );
