@@ -256,6 +256,7 @@ body {
 }
 .tgme_widget_message_video {
   position: relative;
+  display: block;
 }
 .tgme_widget_message_video_thumb {
   display: block;
