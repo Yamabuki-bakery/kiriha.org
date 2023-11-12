@@ -1,8 +1,11 @@
 import { Env } from "$/env";
+import { LazyInit } from "$/lazyinit";
 import { createRewriter } from "$/rewriter";
 
+const lazy_rewriter = new LazyInit(createRewriter);
+
 export const onRequest: PagesFunction<Env> = async ({ request, env }) => {
-  const rewriter = createRewriter({
+  const rewriter = lazy_rewriter.get({
     siteName: env.SiteName,
     twitterSite: env.TwitterSite,
   });
