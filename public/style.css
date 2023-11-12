@@ -2,21 +2,21 @@
   --max-width: 960px;
   --preview-image-size: 300px;
   --side-margin: 1em;
-  --message-radius: 1em;
+  --border-radius: 1em;
   --message-max-width: max-content;
 }
 @media screen and (max-width: 800px) {
   :root {
     --preview-image-size: 200px;
     --side-margin: 0.5em;
-    --message-radius: 0.5em;
+    --border-radius: 0.5em;
   }
 }
 @media screen and (max-width: 560px) {
   :root {
     --preview-image-size: 120px;
     --side-margin: 0;
-    --message-radius: 0;
+    --border-radius: 0;
     --message-max-width: 100%;
   }
 }
@@ -47,7 +47,7 @@ body {
 }
 .tgme_header {
   display: grid;
-  grid-template: "icon name info" auto / max-content 1fr max-content;
+  grid-template: "icon name info" auto / max-content minmax(max-content, 1fr) auto;
   gap: 0.5em;
   padding: 0.5em 1em;
   align-items: center;
@@ -58,7 +58,7 @@ body {
   -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   box-shadow: inset 0 -1px 2px #fff8, 0 1px 5px #0001;
-  border-radius: 0 0 1em 1em;
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
   width: 100%;
   max-width: 1200px;
   margin: auto;
@@ -82,7 +82,8 @@ body {
 .tgme_header .tgme_channel_info_counters {
   grid-area: info;
   display: flex;
-  gap: 1em;
+  gap: 0.8em;
+  overflow-x: auto;
 }
 .tgme_header .tgme_channel_info_counters .tgme_channel_info_counter {
   display: flex;
@@ -110,9 +111,9 @@ body {
   border-radius: 0 0 1em 1em;
   box-shadow: 0 1px 3px #0001;
   background-color: #fffa;
-  width: max-content;
-  max-width: var(--max-width);
+  width: minmax(max-content, var(--max-width));
   box-sizing: border-box;
+  overflow-wrap: anywhere;
 }
 .tgme_channel_history {
   display: flex;
@@ -130,7 +131,7 @@ body {
   gap: 0.5em;
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  border-radius: var(--message-radius);
+  border-radius: var(--border-radius);
   box-shadow: 0 1px 3px #0001;
   background-color: #fffa;
   max-width: var(--message-max-width);
@@ -148,7 +149,7 @@ body {
   margin-top: -0.5em;
 }
 .tgme_widget_message_text {
-  line-break: anywhere;
+  overflow-wrap: anywhere;
   line-height: 1.3;
   font-weight: 200;
 }
