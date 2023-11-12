@@ -1,0 +1,112 @@
+:root {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  line-height: 1.5;
+  font-size: 16px;
+  font-weight: 200;
+
+  background-color: #e5e5f7;
+  background-image: radial-gradient(#5d65ff 0.5px, #e5e5f7 0.5px);
+  background-size: 0.5em 0.5em;
+  background-attachment: fixed;
+
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+:link {
+  all: unset;
+  color: #5d65ff;
+}
+:visited {
+  color: unset;
+  color: #5d65ff;
+}
+header,
+article {
+  max-width: 960px;
+  margin: 0 auto;
+}
+header {
+  background: #fffa;
+  padding: 0.5em;
+  border-radius: 0.5em;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.12),
+    0 4px 4px rgba(0, 0, 0, 0.12), 0 8px 8px rgba(0, 0, 0, 0.12),
+    0 16px 16px rgba(0, 0, 0, 0.12);
+  z-index: 100;
+
+  position: sticky;
+  top: 0.5em;
+}
+header > .author {
+  font-weight: 400;
+}
+header > .info {
+  display: flex;
+  gap: 0.5em;
+}
+header > .info > .views {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2em;
+  font-weight: 400;
+  font-size: 16px;
+}
+header > .info > .views::after {
+  content: "views";
+  font-size: 14px;
+}
+header > h1 {
+  margin: 0;
+}
+article > * {
+  margin: 0.5em 0;
+}
+article
+  > :is(p:not(:has(img)), blockquote, h3, h4, h5, h6, strong, pre, ul, ol) {
+  width: max-content;
+  max-width: 100%;
+  box-sizing: border-box;
+  background-color: #fffa;
+  padding: 0.5em;
+  border-radius: 0.5em;
+}
+article > blockquote > p:first-child {
+  margin-top: 0;
+}
+article > blockquote > p:last-child {
+  margin-bottom: 0;
+}
+article > :is(ul, ol) {
+  padding-left: 1.5em !important;
+}
+h3 {
+  font-size: 30px;
+}
+figure {
+  margin: 0;
+  display: grid;
+  gap: 0.5em;
+}
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 0.5em;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.11), 0 2px 2px rgba(0, 0, 0, 0.11),
+    0 4px 4px rgba(0, 0, 0, 0.11), 0 6px 8px rgba(0, 0, 0, 0.11),
+    0 8px 16px rgba(0, 0, 0, 0.11);
+}
+figcaption {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 400;
+}
+blockquote {
+  border-left: solid 2px;
+  padding-left: 0.5em;
+}
+hr {
+  border-top: 2px dotted #5d65ff;
+}
