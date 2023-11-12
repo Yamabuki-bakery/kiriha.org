@@ -7,17 +7,17 @@
 }
 @media screen and (max-width: 800px) {
   :root {
-      --preview-image-size: 200px;
-      --side-margin: 0.5em;
-      --message-radius: 0.5em;
+    --preview-image-size: 200px;
+    --side-margin: 0.5em;
+    --message-radius: 0.5em;
   }
 }
 @media screen and (max-width: 560px) {
   :root {
-      --preview-image-size: 120px;
-      --side-margin: 0;
-      --message-radius: 0;
-      --message-max-width: 100%;
+    --preview-image-size: 120px;
+    --side-margin: 0;
+    --message-radius: 0;
+    --message-max-width: 100%;
   }
 }
 body {
@@ -47,8 +47,7 @@ body {
 }
 .tgme_header {
   display: grid;
-  grid-template:
-      "icon name info" auto / max-content 1fr max-content;
+  grid-template: "icon name info" auto / max-content 1fr max-content;
   gap: 0.5em;
   padding: 0.5em 1em;
   align-items: center;
@@ -143,6 +142,11 @@ body {
   font-size: 12px;
   font-weight: 600;
 }
+.tgme_widget_message_forwarded_from {
+  font-size: 12px;
+  font-weight: 200;
+  margin-top: -0.5em;
+}
 .tgme_widget_message_text {
   line-break: anywhere;
   line-height: 1.3;
@@ -153,9 +157,9 @@ body {
   position: relative;
   gap: 0.5em;
   grid-template:
-      "title" auto
-      "site" auto
-      "description" 1fr / 1fr;
+    "title" auto
+    "site" auto
+    "description" 1fr / 1fr;
   overflow: hidden;
   border-radius: 0.6em;
   background-color: white;
@@ -164,8 +168,8 @@ body {
 }
 .tgme_widget_message_link_preview:has(.link_preview_right_image) {
   grid-template:
-      "icon title" auto
-      "icon description" 1fr / var(--preview-image-size) 1fr;
+    "icon title" auto
+    "icon description" 1fr / var(--preview-image-size) 1fr;
   height: var(--preview-image-size);
   padding-left: 0;
 }
@@ -173,9 +177,9 @@ body {
   min-height: var(--preview-image-size);
   height: auto;
   grid-template:
-      "icon" auto
-      "title" auto
-      "description" 1fr / 1fr;
+    "icon" auto
+    "title" auto
+    "description" 1fr / 1fr;
 }
 .link_preview_site_name {
   grid-area: site;
@@ -183,8 +187,11 @@ body {
   font-weight: 200;
   color: black;
 }
-:is(.tgme_widget_message_link_preview:has(.link_preview_right_image),.tgme_widget_message_link_preview:has(.link_preview_image))
-.link_preview_site_name {
+:is(
+    .tgme_widget_message_link_preview:has(.link_preview_right_image),
+    .tgme_widget_message_link_preview:has(.link_preview_image)
+  )
+  .link_preview_site_name {
   position: absolute;
   top: 0.5em;
   left: 0.5em;
@@ -201,7 +208,7 @@ body {
   padding-top: 0.5em;
 }
 .link_preview_description {
-  font-size:  12px;
+  font-size: 12px;
   overflow: hidden;
   padding-bottom: 0.5em;
   line-height: 1.1;
@@ -237,4 +244,37 @@ body {
   width: auto;
   max-width: 100%;
   object-fit: cover;
+}
+.emoji_default .emoji {
+  background: none !important;
+}
+.emoji_image .emoji {
+  width: 1.2em;
+  height: 1.2em;
+  vertical-align: top;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative;
+  background: no-repeat -1000px -1000px;
+  background-size: 1.2em 1.2em;
+  text-indent: -10em;
+  padding: 3px 3px 3px 2px;
+  margin: -3px -2px;
+}
+.emoji_image .emoji:before {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: inherit;
+  background-position: 2px 50%;
+  background-position-y: calc(50% + 1px);
+}
+.emoji_image .emoji > b {
+  letter-spacing: 12em;
+  pointer-events: none;
 }
