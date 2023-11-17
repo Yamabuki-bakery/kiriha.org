@@ -176,7 +176,11 @@ function header_process(
           end.before(
             renderToString(
               <>
-                <img class="tgme_page_photo_image" src={channel_photo} />
+                <img
+                  class="tgme_page_photo_image"
+                  alt={`${channel_username}'s avatar`}
+                  src={channel_photo}
+                />
                 <div class="tgme_channel_info_header_title_wrap">
                   <div class="tgme_channel_info_header_title">
                     {channel_title}
@@ -246,6 +250,7 @@ function message_photo_process(rewriter: HTMLRewriter) {
                   class="tgme_widget_message_photo"
                   src={transformed}
                   loading="lazy"
+                  alt="Message photo"
                   style={`aspect-ratio: ${image_width} / ${
                     (image_width * image_ratio) / 100
                   }`}
@@ -275,6 +280,7 @@ function message_photo_process(rewriter: HTMLRewriter) {
         element.removeAttribute("style");
         element.setAttribute("src", transformed);
         element.setAttribute("loading", "lazy");
+        element.setAttribute("alt", "Link preview image");
       },
     });
 }
