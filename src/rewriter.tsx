@@ -262,7 +262,11 @@ function message_photo_process(rewriter: HTMLRewriter) {
             );
             if (classname.includes(" blured ")) {
               end.before(
-                renderToString(<me-img src={transformed}>{img}</me-img>),
+                renderToString(
+                  <me-img src={transformed} style={style}>
+                    {img}
+                  </me-img>
+                ),
                 { html: true }
               );
             } else {

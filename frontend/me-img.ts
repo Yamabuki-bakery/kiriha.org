@@ -20,6 +20,7 @@ const style = css`
     height: 100%;
     overflow: hidden;
     border-radius: 0.5em;
+    max-height: 400px;
   }
 
   img {
