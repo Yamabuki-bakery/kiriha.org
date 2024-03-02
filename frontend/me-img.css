@@ -1,0 +1,8 @@
+:host {
+  display: block;
+}
+
+img {
+  position: absolute;
+  inset: 0;
+}

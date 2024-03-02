@@ -249,15 +249,17 @@ function message_photo_process(rewriter: HTMLRewriter) {
           element.onEndTag((end) => {
             end.before(
               renderToString(
-                <img
-                  class="tgme_widget_message_photo"
-                  src={transformed}
-                  loading="lazy"
-                  alt="Message photo"
-                  style={`aspect-ratio: ${image_width} / ${
-                    (image_width * image_ratio) / 100
-                  }`}
-                />
+                <me-img src={transformed}>
+                  <img
+                    class="tgme_widget_message_photo"
+                    src={transformed}
+                    loading="lazy"
+                    alt="Message photo"
+                    style={`aspect-ratio: ${image_width} / ${
+                      (image_width * image_ratio) / 100
+                    }`}
+                  />
+                </me-img>
               ),
               { html: true }
             );
