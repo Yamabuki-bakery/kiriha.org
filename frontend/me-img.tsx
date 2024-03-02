@@ -26,3 +26,5 @@ class MeImg extends HTMLElement {
     this.#image.src = this.src;
   }
 }
+
+customElements.define("me-img", MeImg);
