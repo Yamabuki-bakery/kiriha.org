@@ -248,6 +248,7 @@ body {
   display: block;
 }
 .tgme_widget_message_photo {
+  max-height: 400px;
   max-width: 100%;
   object-fit: contain;
 }
