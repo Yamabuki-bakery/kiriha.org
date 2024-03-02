@@ -226,7 +226,8 @@ function message_emoji_process(rewriter: HTMLRewriter) {
       element.before(
         renderToString(
           <i class="emoji" style={`background-image: url("/i/emoji/${id}")`} />
-        )
+        ),
+        { html: true }
       );
       element.remove();
     },
