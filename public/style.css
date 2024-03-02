@@ -252,7 +252,7 @@ body {
   height: 100%;
   width: auto;
   max-width: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 .tgme_widget_message_video {
   position: relative;

@@ -42,4 +42,5 @@ await build({
   target: "browser",
   minify: true,
   sourcemap: "external",
+  splitting: true,
 });

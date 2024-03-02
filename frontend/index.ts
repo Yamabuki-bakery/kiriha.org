@@ -1,1 +1,1 @@
-import "./me-time";
+import("./me-time");
