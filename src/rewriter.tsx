@@ -224,9 +224,7 @@ function message_emoji_process(rewriter: HTMLRewriter) {
     element(element) {
       const id = element.getAttribute("emoji-id")!;
       element.before(
-        renderToString(
-          <i class="emoji" style={`background-image: url("/i/emoji/${id}")`} />
-        ),
+        `<i class="emoji" style="background-image: url('/i/emoji/${id}')"></i>`,
         { html: true }
       );
       element.remove();
