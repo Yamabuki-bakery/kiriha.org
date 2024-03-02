@@ -23,6 +23,7 @@ export function createRewriter(context: Context): HTMLRewriter {
     },
   });
   header_process(rewriter, context);
+  message_emoji_process(rewriter);
   message_link_process(rewriter);
   message_photo_process(rewriter);
   message_video_process(rewriter);
@@ -216,6 +217,17 @@ function header_process(
         });
       },
     });
+}
+
+function message_emoji_process(rewriter: HTMLRewriter) {
+  rewriter.on("tg-emoji[emoji-id]", {
+    element(element) {
+      const id = element.getAttribute("emoji-id")!;
+      element.tagName = "i";
+      element.setAttribute("class", "emoji");
+      element.setAttribute("style", `background-image: url("/i/emoji/${id}")`);
+    },
+  });
 }
 
 function message_link_process(rewriter: HTMLRewriter) {
