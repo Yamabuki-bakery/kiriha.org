@@ -1,5 +1,13 @@
 import { formatRelative, parseISO } from "date-fns";
-import { zhCN } from "date-fns/locale";
+import * as locales from "date-fns/locale";
+
+const getLocale = (): locales.Locale | undefined => {
+  const locale = navigator.language.replace("-", "");
+  const rootLocale = locale.substring(0, 2);
+
+  // @ts-ignore
+  return locales[locale] || locales[rootLocale];
+};
 
 class MeTime extends HTMLElement {
   static get observedAttributes() {
@@ -17,7 +25,7 @@ class MeTime extends HTMLElement {
   connectedCallback() {
     if (!this.datetime) return;
     this.innerHTML = formatRelative(parseISO(this.datetime), new Date(), {
-      locale: zhCN,
+      locale: getLocale(),
     });
   }
 }
