@@ -1,9 +1,0 @@
-:host {
-  display: block;
-}
-
-img {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-}
