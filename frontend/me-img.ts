@@ -3,7 +3,7 @@ import { html, svg, attr, css, mutate } from "mutable-element";
 const filter = [
   "'data:image/svg+xml,",
   '<svg xmlns="http://www.w3.org/2000/svg">',
-  '<filter id="blur" x="-20%" y="-20%" width="140%" height="140%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="linearRGB">',
+  '<filter id="blur" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="linearRGB">',
   '<feGaussianBlur in="SourceGraphic" stdDeviation="10" />',
   "<feComponentTransfer>",
   '<feFuncA type="discrete" tableValues="1 1" />',
@@ -18,6 +18,7 @@ const style = css`
     display: block;
     position: relative;
     height: 100%;
+    overflow: hidden;
   }
 
   img {
@@ -28,6 +29,7 @@ const style = css`
     object-fit: cover;
     width: 100%;
     height: 100%;
+    opacity: 0.5;
   }
 `;
 
