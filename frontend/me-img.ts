@@ -1,7 +1,7 @@
 import { html, svg, attr, css, mutate } from "mutable-element";
 
 const filter = [
-  "data:image/svg+xml,",
+  "'data:image/svg+xml,",
   '<svg xmlns="http://www.w3.org/2000/svg">',
   '<filter id="blur" x="-20%" y="-20%" width="140%" height="140%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="linearRGB">',
   '<feGaussianBlur in="SourceGraphic" stdDeviation="10" />',
@@ -10,20 +10,24 @@ const filter = [
   "</feComponentTransfer>",
   "</filter",
   "</svg>",
-  "#blur",
+  "#blur'",
 ].join("");
 
 const style = css`
   :host {
     display: block;
+    position: relative;
+    height: 100%;
   }
 
   img {
     position: absolute;
     inset: 0;
     z-index: -1;
-    filter: url("${filter}");
+    filter: url(${filter});
     object-fit: cover;
+    width: 100%;
+    height: 100%;
   }
 `;
 

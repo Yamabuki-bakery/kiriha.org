@@ -248,15 +248,16 @@ function message_photo_process(rewriter: HTMLRewriter) {
           const transformed = transformURL(url);
           element.removeAttribute("style");
           element.onEndTag((end) => {
+            const style = `aspect-ratio: ${image_width} / ${
+              (image_width * image_ratio) / 100
+            }`;
             const img = (
               <img
                 class="tgme_widget_message_photo"
                 src={transformed}
                 loading="lazy"
                 alt="Message photo"
-                style={`aspect-ratio: ${image_width} / ${
-                  (image_width * image_ratio) / 100
-                }`}
+                style={style}
               />
             );
             if (classname.includes(" blured ")) {
