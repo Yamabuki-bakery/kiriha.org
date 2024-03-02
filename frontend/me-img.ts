@@ -19,6 +19,7 @@ const style = css`
     position: relative;
     height: 100%;
     overflow: hidden;
+    border-radius: 0.5em;
   }
 
   img {
