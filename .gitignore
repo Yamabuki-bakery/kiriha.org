@@ -177,3 +177,5 @@ dist
 .wrangler
 
 public/functions
+public/*.js
+public/*.js.map

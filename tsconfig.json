@@ -17,7 +17,7 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
-    "types": ["bun-types", "@cloudflare/workers-types"],
+    "types": ["bun-types", "@cloudflare/workers-types", "web"],
     "paths": {
       "$/*": ["./src/*"]
     }

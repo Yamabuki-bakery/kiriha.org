@@ -1,3 +1,4 @@
+import type { BuildConfig } from "bun";
 import { readdir } from "node:fs/promises";
 import { join } from "node:path";
 
@@ -19,14 +20,26 @@ for await (const path of walkDir("./functions")) {
   entrypoints.push(path);
 }
 
-const result = await Bun.build({
+async function build(config: BuildConfig) {
+  const result = await Bun.build(config);
+  if (result.logs.length) {
+    console.log(result.logs);
+  }
+  if (!result.success) {
+    process.exit(1);
+  }
+}
+
+await build({
   entrypoints,
   outdir: "public/functions",
   target: "node",
 });
-if (result.logs.length) {
-  console.log(result.logs);
-}
-if (!result.success) {
-  process.exit(1);
-}
+
+await build({
+  entrypoints: ["frontend/index.ts"],
+  outdir: "public",
+  target: "browser",
+  minify: true,
+  sourcemap: "external",
+});

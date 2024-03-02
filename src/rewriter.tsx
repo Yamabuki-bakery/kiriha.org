@@ -49,6 +49,9 @@ function header_process(
           end.before(`<link rel="stylesheet" href="/style.css">`, {
             html: true,
           });
+          end.before(`<script type="module" src="/index.js"></script>`, {
+            html: true,
+          });
         });
       },
     })
