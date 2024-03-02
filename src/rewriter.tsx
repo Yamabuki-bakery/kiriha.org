@@ -223,9 +223,12 @@ function message_emoji_process(rewriter: HTMLRewriter) {
   rewriter.on("tg-emoji[emoji-id]", {
     element(element) {
       const id = element.getAttribute("emoji-id")!;
-      element.tagName = "i";
-      element.setAttribute("class", "emoji");
-      element.setAttribute("style", `background-image: url("/i/emoji/${id}")`);
+      element.before(
+        renderToString(
+          <i class="emoji" style={`background-image: url("/i/emoji/${id}")`} />
+        )
+      );
+      element.remove();
     },
   });
 }
