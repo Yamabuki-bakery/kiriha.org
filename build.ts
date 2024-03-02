@@ -43,4 +43,7 @@ await build({
   minify: true,
   sourcemap: "external",
   splitting: true,
+  loader: {
+    ".css": "text",
+  },
 });

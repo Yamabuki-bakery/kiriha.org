@@ -242,27 +242,31 @@ function message_photo_process(rewriter: HTMLRewriter) {
       element(element) {
         try {
           const style = element.getAttribute("style")!;
+          const classname = element.getAttribute("class")!;
           image_width = extractWidthFromStyle(style);
           const url = extractBackgroundFromStyle(style);
           const transformed = transformURL(url);
           element.removeAttribute("style");
           element.onEndTag((end) => {
-            end.before(
-              renderToString(
-                <me-img src={transformed}>
-                  <img
-                    class="tgme_widget_message_photo"
-                    src={transformed}
-                    loading="lazy"
-                    alt="Message photo"
-                    style={`aspect-ratio: ${image_width} / ${
-                      (image_width * image_ratio) / 100
-                    }`}
-                  />
-                </me-img>
-              ),
-              { html: true }
+            const img = (
+              <img
+                class="tgme_widget_message_photo"
+                src={transformed}
+                loading="lazy"
+                alt="Message photo"
+                style={`aspect-ratio: ${image_width} / ${
+                  (image_width * image_ratio) / 100
+                }`}
+              />
             );
+            if (classname.includes(" blured ")) {
+              end.before(
+                renderToString(<me-img src={transformed}>{img}</me-img>),
+                { html: true }
+              );
+            } else {
+              end.before(renderToString(img), { html: true });
+            }
           });
         } catch {
           element.remove();
