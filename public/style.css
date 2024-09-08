@@ -245,14 +245,12 @@ body {
   font-weight: 600;
 }
 .tgme_widget_message_photo_wrap {
-  height: 300px;
   display: block;
 }
 .tgme_widget_message_photo {
-  height: 100%;
-  width: auto;
+  max-height: 400px;
   max-width: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 .tgme_widget_message_video {
   position: relative;

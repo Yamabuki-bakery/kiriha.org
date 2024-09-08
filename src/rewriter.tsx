@@ -23,6 +23,7 @@ export function createRewriter(context: Context): HTMLRewriter {
     },
   });
   header_process(rewriter, context);
+  message_emoji_process(rewriter);
   message_link_process(rewriter);
   message_photo_process(rewriter);
   message_video_process(rewriter);
@@ -47,6 +48,9 @@ function header_process(
         counters.clear();
         element.onEndTag((end) => {
           end.before(`<link rel="stylesheet" href="/style.css">`, {
+            html: true,
+          });
+          end.before(`<script type="module" src="/index.js"></script>`, {
             html: true,
           });
         });
@@ -215,6 +219,19 @@ function header_process(
     });
 }
 
+function message_emoji_process(rewriter: HTMLRewriter) {
+  rewriter.on("tg-emoji[emoji-id]", {
+    element(element) {
+      const id = element.getAttribute("emoji-id")!;
+      element.before(
+        `<i class="emoji" style="background-image: url('/i/emoji/${id}')"></i>`,
+        { html: true }
+      );
+      element.remove();
+    },
+  });
+}
+
 function message_link_process(rewriter: HTMLRewriter) {
   rewriter.on(
     'a.tgme_widget_message_link_preview[href^="https://telegra.ph/"]',
@@ -239,25 +256,36 @@ function message_photo_process(rewriter: HTMLRewriter) {
       element(element) {
         try {
           const style = element.getAttribute("style")!;
+          const classname = element.getAttribute("class")!;
           image_width = extractWidthFromStyle(style);
           const url = extractBackgroundFromStyle(style);
           const transformed = transformURL(url);
           element.removeAttribute("style");
           element.onEndTag((end) => {
-            end.before(
-              renderToString(
-                <img
-                  class="tgme_widget_message_photo"
-                  src={transformed}
-                  loading="lazy"
-                  alt="Message photo"
-                  style={`aspect-ratio: ${image_width} / ${
-                    (image_width * image_ratio) / 100
-                  }`}
-                />
-              ),
-              { html: true }
+            const style = `aspect-ratio: ${image_width} / ${
+              (image_width * image_ratio) / 100
+            }`;
+            const img = (
+              <img
+                class="tgme_widget_message_photo"
+                src={transformed}
+                loading="lazy"
+                alt="Message photo"
+                style={style}
+              />
             );
+            if (classname.includes(" blured ")) {
+              end.before(
+                renderToString(
+                  <me-img src={transformed} style={style}>
+                    {img}
+                  </me-img>
+                ),
+                { html: true }
+              );
+            } else {
+              end.before(renderToString(img), { html: true });
+            }
           });
         } catch {
           element.remove();
